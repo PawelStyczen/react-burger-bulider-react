@@ -11,6 +11,7 @@ const controls = [
 
 const bulidControls = (props) => (
   <div className={classes.BulidControls}>
+    <p>Current price: <strong>{props.price.toFixed(2)}</strong></p>
     {controls.map((ctrl) => (
       <BulidControl
         key={ctrl.label}
@@ -21,6 +22,8 @@ const bulidControls = (props) => (
         disabled={props.disabled[ctrl.type]}
       />
     ))}
+    <button className={classes.OrderButton}
+    disabled={!props.purchasable}>ORDER NOW</button>
   </div>
 );
 
