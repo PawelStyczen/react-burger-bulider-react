@@ -23,7 +23,7 @@ class BurgerBulider extends Component {
     },
     totalPrice: 4,
     purchasable: false,
-    purchasing: false
+    purchasing: false,
   };
 
   updatePurchaseState(ingredients) {
@@ -71,16 +71,16 @@ class BurgerBulider extends Component {
   };
 
   purchaseHandler = () => {
-    this.setState({purchasing:true});
-  }
+    this.setState({ purchasing: true });
+  };
 
   purchaseCancelHandler = () => {
-    this.setState({purchasing: false});
-  }
+    this.setState({ purchasing: false });
+  };
 
   purchaseContinueHandler = () => {
-    alert('You Continue');
-  }
+    alert("You Continue");
+  };
 
   render() {
     const disabledInfo = {
@@ -91,10 +91,18 @@ class BurgerBulider extends Component {
     }
     return (
       <React.Fragment>
-        <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
-          <OrderSummary ingredients={this.state.ingredients}
-          purchaseCancelled={this.purchaseCancelHandler}
-          purchaseContinued={this.purchaseContinueHandler}></OrderSummary>
+        <Modal
+          show={this.state.purchasing}
+          modalClosed={this.purchaseCancelHandler}
+        >
+          <OrderSummary
+            ingredients={this.state.ingredients}
+            purchaseCancelled={this.purchaseCancelHandler}
+            purchaseContinued={this.purchaseContinueHandler}
+            price={this.state.totalPrice}
+          >
+            
+          </OrderSummary>
         </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BulidControls
