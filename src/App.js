@@ -1,4 +1,4 @@
-import Layout from './components/Layout/Layout'
+import Layout from './containers/Layout/Layout'
 import React, { Component } from "react";
 import BurgerBulider from './containers/BurgerBulider/BurgerBulider'
 
