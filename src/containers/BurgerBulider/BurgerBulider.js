@@ -9,14 +9,14 @@ import orderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import withErrorHandler from "../withErrorHandler/withErrorHandler";
 import axios from "../../axios-orders";
-import * as actionTypes from '../../store/actions';
+import * as burgerBuliderActions from '../../store/actions/index';
 
 
 class BurgerBulider extends Component {
   state = {
     
     
-    purchasable: false,
+   
     purchasing: false,
     loading: false,
     error: false,
@@ -35,7 +35,7 @@ class BurgerBulider extends Component {
     //   });
   }
 
-  updatePurchaseState(ingredients) {
+  updatePurchaseHandler(ingredients) {
     const sum = Object.keys(ingredients)
       .map((igKey) => {
         return ingredients[igKey];
@@ -44,7 +44,7 @@ class BurgerBulider extends Component {
         return sum + el;
       }, 0);
 
-    this.setState({ purchasable: sum > 0 });
+    return sum > 0 ;
   }
 
 
@@ -58,17 +58,7 @@ class BurgerBulider extends Component {
   };
 
   purchaseContinueHandler = () => {
-    
-    const queryParams = [];
-    for (let i in this.state.ingredients) {
-      queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
-    }
-    queryParams.push('price=' + this.state.totalPrice);
-    const queryString = queryParams.join('&');
-    this.props.history.push({
-      pathname: '/checkout',
-      search: '?' + queryString
-    });
+    this.props.history.push('/checkout');
   };
 
   render() {
@@ -95,7 +85,7 @@ class BurgerBulider extends Component {
             ingredientRemoved={this.props.onIngredientRemoved}
             disabled={disabledInfo}
             ordered={this.purchaseHandler}
-            purchasable={this.state.purchasable}
+            purchasable={this.updatePurchaseHandler(this.props.ings)}
             price={this.props.price}
           />
         </React.Fragment>
@@ -137,8 +127,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return{
-    onIngredientAdded: (ingName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingName}),
-    onIngredientRemoved: (ingName) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredientName: ingName}),
+    onIngredientAdded: (ingName) => dispatch(burgerBuliderActions.addIngredient(ingName)),
+    onIngredientRemoved: (ingName) => dispatch(burgerBuliderActions.removeIngredient(ingName)),
   }
 }
 
