@@ -1,38 +1,35 @@
 import Layout from "./containers/Layout/Layout";
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import asyncComponent from './hoc/asyncComponent/asyncComponent';
-
-
+import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 
 import BurgerBulider from "./containers/BurgerBulider/BurgerBulider";
-
-
-
 
 import Logout from "./containers/Auth/Logout/Logout";
 import * as actions from "./store/actions/index";
 
 const asyncCheckout = asyncComponent(() => {
-  return import('./containers/Checkout/Checkout');
+  return import("./containers/Checkout/Checkout");
 });
 
 const asyncOrders = asyncComponent(() => {
-  return import('./containers/Orders/Orders')
-})
+  return import("./containers/Orders/Orders");
+});
 
 const asyncAuth = asyncComponent(() => {
-  return import('./containers/Auth/Auth')
-})
+  return import("./containers/Auth/Auth");
+});
 
+const App = props => {
 
-class App extends Component {
-  componentDidMount() {
-    this.props.onTryAutoSignup();
-  }
+  useEffect(() => {
+    props.onTryAutoSignup();
+  }, [])
 
-  render() {
+ 
+
+  
     let routes = (
       <Switch>
         <Route path="/auth" component={asyncAuth} />
@@ -42,7 +39,7 @@ class App extends Component {
       </Switch>
     );
 
-    if (this.props.isAuthenticated) {
+    if (props.isAuthenticated) {
       routes = (
         <Switch>
           <Route path="/checkout" component={asyncCheckout} />
@@ -60,7 +57,7 @@ class App extends Component {
       </div>
     );
   }
-}
+
 
 const mapStateToProps = (state) => {
   return {
