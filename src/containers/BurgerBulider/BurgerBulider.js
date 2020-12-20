@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux';
 
 import Burger from "../../components/Burger/Burger";
@@ -13,20 +13,18 @@ import axios from "../../axios-orders";
 import * as actions from '../../store/actions/index';
 
 
-class BurgerBulider extends Component {
-  state = {
-    
-    
-   
-    purchasing: false,
-  
-  };
+const BurgerBulider = props =>  {
+ const [purchasing, setPurchasing] = useState(false);
 
-  componentDidMount() {
-    this.props.onInitIngredients()
-  }
 
-  updatePurchaseHandler(ingredients) {
+ useEffect(()=>{
+
+  props.onInitIngredients();
+ }, [])
+
+ 
+
+ const updatePurchaseHandler = (ingredients) => {
     const sum = Object.keys(ingredients)
       .map((igKey) => {
         return ingredients[igKey];
@@ -40,27 +38,29 @@ class BurgerBulider extends Component {
 
 
 
-  purchaseHandler = () => {
-    if (this.props.isAuthenticated){
-      this.setState({ purchasing: true });
+ const purchaseHandler = () => {
+    if (props.isAuthenticated){
+     setPurchasing(true);
     } else {
-      this.props.onSetAuthRedirectPath('/checkout');
-      this.props.history.push('/auth');
+      props.onSetAuthRedirectPath('/checkout');
+      props.history.push('/auth');
     }
     
   };
 
-  purchaseCancelHandler = () => {
-    this.setState({ purchasing: false });
+  const purchaseCancelHandler = () => {
+ 
+   setPurchasing(false);
   };
 
-  purchaseContinueHandler = () => {
-    this.props.history.push('/checkout');
+  const purchaseContinueHandler = () => {
+    props.onInitPurchase();
+    props.history.push('/checkout');
   };
 
-  render() {
+  
     const disabledInfo = {
-      ...this.props.ings,
+      ...props.ings,
     };
     for (let key in disabledInfo) {
       disabledInfo[key] = disabledInfo[key] <= 0;
@@ -69,31 +69,31 @@ class BurgerBulider extends Component {
 
     
     let orderSummary = null;
-    let burger = this.props.error ? <p>Ingredients cant be loaded</p> : <Spinner />;
+    let burger = props.error ? <p>Ingredients cant be loaded</p> : <Spinner />;
 
 
-    if (this.props.ings) {
+    if (props.ings) {
       burger = (
         <React.Fragment>
-          <Burger ingredients={this.props.ings} />
+          <Burger ingredients={props.ings} />
 
           <BulidControls
-            ingredientAdded={this.props.onIngredientAdded}
-            ingredientRemoved={this.props.onIngredientRemoved}
+            ingredientAdded={props.onIngredientAdded}
+            ingredientRemoved={props.onIngredientRemoved}
             disabled={disabledInfo}
-            ordered={this.purchaseHandler}
-            purchasable={this.updatePurchaseHandler(this.props.ings)}
-            price={this.props.price}
-            isAuth={this.props.isAuthenticated}
+            ordered={purchaseHandler}
+            purchasable={updatePurchaseHandler(props.ings)}
+            price={props.price}
+            isAuth={props.isAuthenticated}
           />
         </React.Fragment>
       );
       orderSummary = (
         <OrderSummary
-          ingredients={this.props.ings}
-          purchaseCancelled={this.purchaseCancelHandler}
-          purchaseContinued={this.purchaseContinueHandler}
-          price={this.props.price}
+          ingredients={props.ings}
+          purchaseCancelled={purchaseCancelHandler}
+          purchaseContinued={purchaseContinueHandler}
+          price={props.price}
         ></OrderSummary>
       );
     }
@@ -103,8 +103,8 @@ class BurgerBulider extends Component {
     return (
       <React.Fragment>
         <Modal
-          show={this.state.purchasing}
-          modalClosed={this.purchaseCancelHandler}
+          show={purchasing}
+          modalClosed={purchaseCancelHandler}
         >
           {orderSummary}
         </Modal>
@@ -112,7 +112,6 @@ class BurgerBulider extends Component {
       </React.Fragment>
     );
   }
-}
 
 const mapStateToProps = state => {
   return {
