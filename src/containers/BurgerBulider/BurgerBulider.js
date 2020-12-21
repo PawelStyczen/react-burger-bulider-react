@@ -54,13 +54,13 @@ const BurgerBulider = props =>  {
   };
 
   const purchaseContinueHandler = () => {
-    props.onInitPurchase();
+    //props.onInitPurchase();
     props.history.push('/checkout');
   };
 
   
     const disabledInfo = {
-      ...props.ings,
+      ...props.ings
     };
     for (let key in disabledInfo) {
       disabledInfo[key] = disabledInfo[key] <= 0;
