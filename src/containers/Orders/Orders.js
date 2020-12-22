@@ -9,10 +9,16 @@ import * as actions from "../../store/actions/index";
 import { PURCHASE_BURGER_START } from "../../store/actions/actionTypes";
 import Spinner from "../../components/UI/Spinner/Spinner";
 
+
+
+
 const Orders = (props) => {
+
+const {onFetchOrders} = props
+
   useEffect(() => {
-    props.onFetchOrders(props.token, props.userId);
-  }, []);
+    onFetchOrders(props.token, props.userId);
+  }, [onFetchOrders]);
 
   let orders = <Spinner />;
   if (!props.loading) {
